@@ -6,7 +6,7 @@
 /*   By: cchudant <cchudant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/22 13:53:48 by skybt             #+#    #+#             */
-/*   Updated: 2020/01/24 10:45:16 by cchudant         ###   ########.fr       */
+/*   Updated: 2020/01/24 15:27:49 by cchudant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -504,8 +504,7 @@ namespace ft
     template < typename T >
     void Vector< T >::pop_back()
     {
-        if (_len) // check for length even though standard says it's UB
-            erase(end() - 1);
+        erase(end() - 1);
     }
 
     template < typename T >
@@ -554,20 +553,13 @@ namespace ft
     template < typename T >
     bool operator<=(const Vector< T >& lhs, const Vector< T >& rhs)
     {
-        for (size_t i = 0; i < lhs.size() && i < rhs.size(); i++)
-            if (lhs[i] != rhs[i])
-                return lhs[i] < rhs[i];
-
-        if (lhs.size() == rhs.size())
-            return true; // lhs == rhs at that point
-
-        return lhs.size() < rhs.size(); // lhs < rhs if lhs is prefix of rhs
+		return !(lhs > rhs);
     }
     
     template < typename T >
     bool operator>(const Vector< T >& lhs, const Vector< T >& rhs)
     {
-        return !(lhs <= rhs);
+        return rhs < lhs;
     }
 
     template < typename T >
