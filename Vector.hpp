@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Vector.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skybt <skybt@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cchudant <cchudant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/22 13:53:48 by skybt             #+#    #+#             */
-/*   Updated: 2020/01/22 20:32:39 by skybt            ###   ########.fr       */
+/*   Updated: 2020/01/24 10:45:16 by cchudant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ namespace ft
             T* _e;
 
         public:
+            VectorIterator();
             VectorIterator(T* elem);
             T* ptr() const;
 
@@ -95,33 +96,33 @@ namespace ft
             typedef size_t size_type;
             typedef std::ptrdiff_t difference_type;
             typedef T& reference;
-            typedef  const T& const_reference;
+            typedef const T& const_reference;
             typedef T* pointer;
-            typedef  const T * const_pointer;
+            typedef const T * const_pointer;
             typedef VectorIterator< T > iterator;
             typedef VectorIterator< const T > const_iterator;
             typedef std::reverse_iterator< VectorIterator< T > > reverse_iterator;
             typedef std::reverse_iterator< VectorIterator< const T > > const_reverse_iterator;
 
             Vector();
-            explicit Vector(size_t count,  const T& value = T());
+            explicit Vector(size_t count, const T& value = T());
             template < typename InputIt >
             Vector(InputIt first, InputIt last);
             Vector(const Vector< T >& other);
             ~Vector();
             Vector< T >& operator=(const Vector< T >& other);
-            void assign(size_t count,  const T& value);
+            void assign(size_t count, const T& value);
             template < typename InputIt >
             void assign(InputIt first, InputIt last);
 
             T& at(size_t pos);
-             const T& at(size_t pos) const;
+            const T& at(size_t pos) const;
             T& operator[](size_t pos);
-             const T& operator[](size_t pos) const;
+            const T& operator[](size_t pos) const;
             T& front();
-             const T& front() const;
+            const T& front() const;
             T& back();
-             const T& back() const;
+            const T& back() const;
 
             VectorIterator< T > begin();
             VectorIterator< const T > begin() const;
@@ -149,8 +150,6 @@ namespace ft
             void pop_back();
             void resize(size_t count, T value = T());
             void swap(Vector< T >& other);
-    
-            friend void swap(Vector< T >& lhs, Vector< T >& rhs);
     };
 
     template < typename T >
@@ -180,11 +179,10 @@ namespace ft
     }
 
     template < typename T >
-    Vector< T >::Vector(size_t count,  const T& value):
+    Vector< T >::Vector(size_t count, const T& value):
         _arr(NULL), _len(0), _cap(0)
     {
-        for (size_t i = 0; i < count; i++)
-            push_back(T(value));
+        insert(begin(), count, value);
     }
 
     template < typename T >
@@ -192,17 +190,14 @@ namespace ft
     Vector< T >::Vector(InputIt first, InputIt last):
         _arr(NULL), _len(0), _cap(0)
     {
-        for (; first != last; first++)
-            push_back(*first);
+        insert(begin(), first, last);
     }
 
     template < typename T >
     Vector< T >::Vector(const Vector< T >& other):
         _arr(NULL), _len(0), _cap(0)
     {
-        for (const VectorIterator< T > ite = other.begin();
-                ite != other.end(); ite++)
-            push_back(*ite);
+        insert(begin(), other.begin(), other.end());
     }
 
     template < typename T >
@@ -218,19 +213,23 @@ namespace ft
     Vector< T >& Vector< T >::operator=(const Vector< T >& other)
     {
         clear();
-        for (const VectorIterator< T > ite = other.begin();
-                ite != other.end(); ite++)
-            push_back(*ite);
-
+        insert(begin(), other.begin(), other.end());
         return *this;
     }
 
     template < typename T >
-    void Vector< T >::assign(size_t count,  const T& value)
+    void Vector< T >::assign(size_t count, const T& value)
     {
         clear();
-        for (size_t i = 0; i < count; i++)
-            push_back(T(value));
+        insert(begin(), count, value);
+    }
+
+    template < typename T >
+    template < typename InputIt >
+    void Vector< T >::assign(InputIt first, InputIt last)
+    {
+        clear();
+        insert(begin(), first, last);
     }
 
     /* FIELD ACCESS */
@@ -330,25 +329,25 @@ namespace ft
     template < typename T >
     std::reverse_iterator< VectorIterator< T > > Vector< T >::rbegin()
     {
-        return make_reverse_iterator(begin());
+        return std::reverse_iterator< VectorIterator< T > >(end());
     }
 
     template < typename T >
     std::reverse_iterator< VectorIterator< const T > > Vector< T >::rbegin() const
     {
-        return make_reverse_iterator(begin());
+        return std::reverse_iterator< VectorIterator< T > >(end());
     }
 
     template < typename T >
     std::reverse_iterator< VectorIterator< T > > Vector< T >::rend()
     {
-        return make_reverse_iterator(end());
+        return std::reverse_iterator< VectorIterator< T > >(begin());
     }
 
     template < typename T >
     std::reverse_iterator< VectorIterator< const T > > Vector< T >::rend() const
     {
-        return make_reverse_iterator(end());
+        return std::reverse_iterator< VectorIterator< T > >(begin());
     }
 
     /* CAPACITY */
@@ -405,52 +404,56 @@ namespace ft
     template < typename T >
     void Vector< T >::clear()
     {
-        std::allocator< T > alloc;
-        for (size_t i = 0; i < _len; i++)
-            alloc.destroy(&_arr[i]); // call destructor
-
-        // do not change the capacity
-
-        _arr = NULL;
-        _len = 0;
+        erase(begin(), end());
     }
 
     template < typename T >
     VectorIterator< T > Vector< T >::insert(VectorIterator< T > pos, const T& value)
     {
-        return insert(pos, 1, value);
+        insert(pos, 1, value);
+        return pos;
     }
 
     template < typename T >
     void Vector< T >::insert(VectorIterator< T > pos, size_t count, const T& value)
     {
-        reserve(_cap + count);
-
         size_t index = pos.ptr() - _arr;
+        if (!count)
+            return;
+
+        reserve(_len + count); // reserve after calculating the index!
+        // (otherwhise iterator `pos` is invalidated)
+
         std::allocator< T > alloc;
-        for (ssize_t i = _len - 1; i >= index; i++)
+
+        for (std::ptrdiff_t i = _len - 1; i >= (std::ptrdiff_t)index; i--)
         {
             // move elements count times to the right
-            alloc.construct(&_arr[i - index], _arr[i]); // copy constructor
+            alloc.construct(&_arr[i + count], _arr[i]); // copy constructor
             alloc.destroy(&_arr[i]); // call destructor
         }
 
-        for (size_t i = index; i < count; i++)
+        for (size_t i = index; i < index + count; i++)
             alloc.construct(&_arr[i], value); // copy constructor
+
         _len += count;
-        return pos;
     }
 
     template < typename T >
     template < typename InputIt >
     void Vector< T >::insert(VectorIterator< T > pos, InputIt first, InputIt last)
     {
-        size_t count = std::distance(first, last);
-        reserve(_cap + count);
-
         size_t index = pos.ptr() - _arr;
+        size_t count = std::distance(first, last);
+        if (!count)
+            return;
+
+        reserve(_len + count); // reserve after calculating the index!
+        // (otherwhise iterator `pos` is invalidated)
+
         std::allocator< T > alloc;
-        for (size_t i = index; i < _len; i++)
+
+        for (std::ptrdiff_t i = _len - 1; i >= (std::ptrdiff_t)index; i--)
         {
             // move elements count times to the right
             alloc.construct(&_arr[i + count], _arr[i]); // copy constructor
@@ -458,7 +461,9 @@ namespace ft
         }
 
         for (InputIt ite = first; ite != last; ++ite)
-            alloc.construct(&_arr[i], *ite); // copy constructor
+            alloc.construct(&_arr[index++], *ite); // copy constructor
+
+        _len += count;
     }
 
     template < typename T >
@@ -470,52 +475,46 @@ namespace ft
     template < typename T >
     VectorIterator< T > Vector< T >::erase(VectorIterator< T > first, VectorIterator< T > last)
     {
-        size_t count = std::distance(first, last);
-        size_t index = pos.ptr() - _arr;
+        size_t count = last - first;
+        if (count <= 0)
+            return last;
+
+        size_t index = first.ptr() - _arr;
     
         std::allocator< T > alloc;
-        for (size_t i = index; i < count; i++)
-            alloc.destroy(&_arr[index + i]); // call destructor
+        for (size_t i = index; i < index + count; i++)
+            alloc.destroy(&_arr[i]); // call destructor
 
-        for (size_t i = index; i < _len; i++)
+        for (size_t i = index + count; i < _len; i++)
         {
-            // move elements one to the left
+            // move elements count to the left
             alloc.construct(&_arr[i - count], _arr[i]); // copy constructor
             alloc.destroy(&_arr[i]); // call destructor
         }
+        _len -= count;
+        return first;
     }
 
     template < typename T >
-    void Vector< T >::push_back( const T& value)
+    void Vector< T >::push_back(const T& value)
     {
-        reserve(_cap + 1);
-        std::allocator< T > alloc;
-        alloc.construct(&_arr[_len], value); // copy constructor
-        _len++;
+        insert(end(), value);
     }
 
     template < typename T >
     void Vector< T >::pop_back()
     {
         if (_len) // check for length even though standard says it's UB
-        {
-            std::allocator< T > alloc;
-            alloc.destroy(&_arr[_len - 1]);
-            _len--;
-        }
+            erase(end() - 1);
     }
 
     template < typename T >
     void Vector< T >::resize(size_t count, T value)
     {
-        reserve(count); // realloc if necessary
-        std::allocator< T > alloc;
-        for (size_t i = _len; i < count; i++)
-        {
-            // construct new items when count > _len
-            alloc.construct(&_arr[i], value); // copy constructor
-        }
-        _len = count;
+        if (count >= _len)
+            insert(end(), count - _len, value);
+        else
+            erase(begin() + count, end());
     }
 
     /* NON MEMBER FUNCTIONS */
@@ -542,7 +541,7 @@ namespace ft
     template < typename T >
     bool operator<(const Vector< T >& lhs, const Vector< T >& rhs)
     {
-        for (size_t i = 0; i < lhs._len && i < rhs._len; i++)
+        for (size_t i = 0; i < lhs.size() && i < rhs.size(); i++)
             if (lhs[i] != rhs[i])
                 return lhs[i] < rhs[i];
 
@@ -555,7 +554,7 @@ namespace ft
     template < typename T >
     bool operator<=(const Vector< T >& lhs, const Vector< T >& rhs)
     {
-        for (size_t i = 0; i < lhs._len && i < rhs._len; i++)
+        for (size_t i = 0; i < lhs.size() && i < rhs.size(); i++)
             if (lhs[i] != rhs[i])
                 return lhs[i] < rhs[i];
 
@@ -596,6 +595,12 @@ namespace ft
     template < typename T >
     VectorIterator< T >::VectorIterator(T* elem):
         _e(elem)
+    {
+    }
+
+    template < typename T >
+    VectorIterator< T >::VectorIterator():
+        _e(NULL)
     {
     }
 
@@ -682,61 +687,61 @@ namespace ft
     template < typename T >
     bool operator==(const VectorIterator< T >& lhs, const VectorIterator< T >& rhs)
     {
-        return lhs._e == rhs._e;
+        return lhs.ptr() == rhs.ptr();
     }
 
     template < typename T >
     bool operator!=(const VectorIterator< T >& lhs, const VectorIterator< T >& rhs)
     {
-        return lhs._e != rhs._e;
+        return lhs.ptr() != rhs.ptr();
     }
 
     template < typename T >
     bool operator<(const VectorIterator< T >& lhs, const VectorIterator< T >& rhs)
     {
-        return lhs._e < rhs._e;
+        return lhs.ptr() < rhs.ptr();
     }
 
     template < typename T >
     bool operator>(const VectorIterator< T >& lhs, const VectorIterator< T >& rhs)
     {
-        return lhs._e > rhs._e;
+        return lhs.ptr() > rhs.ptr();
     }
 
     template < typename T >
     bool operator<=(const VectorIterator< T >& lhs, const VectorIterator< T >& rhs)
     {
-        return lhs._e <= rhs._e;
+        return lhs.ptr() <= rhs.ptr();
     }
 
     template < typename T >
     bool operator>=(const VectorIterator< T >& lhs, const VectorIterator< T >& rhs)
     {
-        return lhs._e >= rhs._e;
+        return lhs.ptr() >= rhs.ptr();
     }
 
     template < typename T >
     VectorIterator< T > operator+(const VectorIterator< T >& ite, size_t offset)
     {
-        return ite._e + offset;
+        return ite.ptr() + offset;
     }
 
     template < typename T >
     VectorIterator< T > operator+(size_t offset, const VectorIterator< T >& ite)
     {
-        return offset + ite._e;
+        return offset + ite.ptr();
     }
 
     template < typename T >
     VectorIterator< T > operator-(const VectorIterator< T >& ite, size_t offset)
     {
-        return ite._e - offset;
+        return ite.ptr() - offset;
     }
 
     template < typename T >
     std::ptrdiff_t operator-(const VectorIterator< T >& lhs, const VectorIterator< T >& rhs)
     {
-        return lhs._e - rhs._e;
+        return lhs.ptr() - rhs.ptr();
     }
 }
 
