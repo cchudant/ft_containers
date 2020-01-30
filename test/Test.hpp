@@ -6,7 +6,7 @@
 /*   By: cchudant <cchudant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/24 06:27:31 by cchudant          #+#    #+#             */
-/*   Updated: 2020/01/30 22:34:23 by cchudant         ###   ########.fr       */
+/*   Updated: 2020/01/30 23:15:43 by cchudant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "../Vector.hpp"
 # include "../List.hpp"
 # include "../Stack.hpp"
+# include "../Queue.hpp"
 # include <iostream>
 # include <assert.h>
 
@@ -46,5 +47,6 @@ void test_one(std::string name, void (&fn)());
 void test_vector();
 void test_list();
 void test_stack();
+void test_queue();
 
 #endif
