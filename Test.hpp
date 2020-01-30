@@ -6,7 +6,7 @@
 /*   By: cchudant <cchudant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/24 06:27:31 by cchudant          #+#    #+#             */
-/*   Updated: 2020/01/24 10:44:36 by cchudant         ###   ########.fr       */
+/*   Updated: 2020/01/30 16:28:52 by cchudant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define TEST_HPP
 
 # include "Vector.hpp"
+# include "List.hpp"
 # include <iostream>
 # include <assert.h>
 
@@ -29,7 +30,7 @@ class ConstrCounter
         ConstrCounter(const ConstrCounter &o);
         ~ConstrCounter();
 
-        static void resetCounters();
+        static void reset_counters();
 };
 
 bool operator==(const ConstrCounter& lhs, const ConstrCounter& rhs);
@@ -39,8 +40,9 @@ bool operator<=(const ConstrCounter& lhs, const ConstrCounter& rhs);
 bool operator>(const ConstrCounter& lhs, const ConstrCounter& rhs);
 bool operator>=(const ConstrCounter& lhs, const ConstrCounter& rhs);
 
-void testOne(std::string name, void (&fn)());
+void test_one(std::string name, void (&fn)());
 
 void test_vector();
+void test_list();
 
 #endif
