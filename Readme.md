@@ -2,10 +2,10 @@
 
 This is the ft_containers project from the new cursus.
 
-You have to recreate these C++ containers:
+You have to reimplement the following C++ containers:
 - [x] Vector ([std::vector])
 - [x] List ([std::list])
-- [ ] Stack ([std::stack])
+- [x] Stack ([std::stack])
 - [ ] Map ([std::map])
 - [ ] Queue ([std::queue])
 
@@ -15,7 +15,7 @@ Bonus:
 - [ ] Multimap ([std::multimap])
 - [ ] Multiset ([std::multiset])
 
-The implementation comes with a large set of tests
+This implementation comes with a large set of tests in the test directory.
 
 [std::vector]: http://www.cplusplus.com/reference/vector/vector
 [std::list]: http://www.cplusplus.com/reference/list/list

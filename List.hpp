@@ -6,7 +6,7 @@
 /*   By: cchudant <cchudant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/24 10:52:36 by cchudant          #+#    #+#             */
-/*   Updated: 2020/01/30 21:25:54 by cchudant         ###   ########.fr       */
+/*   Updated: 2020/01/30 21:33:52 by cchudant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,13 +117,13 @@ namespace ft
 	template <typename T>
 	bool operator==(const ListIterator<T>& lhs, const ListIterator<T>& rhs)
 	{
-		return (void*)lhs._prv == (void*)rhs._prv && (void*)lhs._nxt == (void*)rhs._nxt;
+		return lhs._prv == rhs._prv && lhs._nxt == rhs._nxt;
 	}
 
 	template <typename T>
 	bool operator!=(const ListIterator<T>& lhs, const ListIterator<T>& rhs)
 	{
-		return (void*)lhs._prv != (void*)rhs._prv || (void*)lhs._nxt != (void*)rhs._nxt;
+		return lhs._prv != rhs._prv || lhs._nxt != rhs._nxt;
 	}
 
 	template <typename T>

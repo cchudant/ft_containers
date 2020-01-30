@@ -6,7 +6,7 @@
 /*   By: cchudant <cchudant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/22 15:31:12 by skybt             #+#    #+#             */
-/*   Updated: 2020/01/30 18:13:09 by cchudant         ###   ########.fr       */
+/*   Updated: 2020/01/30 22:16:38 by cchudant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ int main()
 	test_vector();
 	std::cout << ":: List ::" << std::endl;
 	test_list();
+	std::cout << ":: Stack ::" << std::endl;
+	test_stack();
 	std::cout << ":: Everything is ok! ::" << std::endl;
 	return 0;
 }

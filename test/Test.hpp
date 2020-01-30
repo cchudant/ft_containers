@@ -6,15 +6,16 @@
 /*   By: cchudant <cchudant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/24 06:27:31 by cchudant          #+#    #+#             */
-/*   Updated: 2020/01/30 16:28:52 by cchudant         ###   ########.fr       */
+/*   Updated: 2020/01/30 22:34:23 by cchudant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TEST_HPP
 # define TEST_HPP
 
-# include "Vector.hpp"
-# include "List.hpp"
+# include "../Vector.hpp"
+# include "../List.hpp"
+# include "../Stack.hpp"
 # include <iostream>
 # include <assert.h>
 
@@ -44,5 +45,6 @@ void test_one(std::string name, void (&fn)());
 
 void test_vector();
 void test_list();
+void test_stack();
 
 #endif
