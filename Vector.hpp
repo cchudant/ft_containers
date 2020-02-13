@@ -6,7 +6,7 @@
 /*   By: cchudant <cchudant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/22 13:53:48 by skybt             #+#    #+#             */
-/*   Updated: 2020/01/30 16:15:19 by cchudant         ###   ########.fr       */
+/*   Updated: 2020/02/13 18:14:40 by cchudant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,7 @@
 
 # include <sstream>
 # include <stdexcept>
-# include <utility>
-# include <iterator>
+# include "Utility.hpp"
 
 namespace ft
 {
@@ -27,6 +26,12 @@ namespace ft
 			T* _e;
 
 		public:
+			typedef std::ptrdiff_t difference_type;
+			typedef T value_type;
+			typedef T* pointer;
+			typedef T& reference;
+			typedef RandomAccessIteratorTag iterator_category;
+
 			VectorIterator():
 				_e(NULL)
 			{
@@ -41,13 +46,6 @@ namespace ft
 			{
 				return _e;
 			}
-
-			typedef T value_type;
-			typedef size_t size_type;
-			typedef std::ptrdiff_t difference_type;
-			typedef T& reference;
-			typedef T* pointer;
-			typedef std::random_access_iterator_tag iterator_category;
 
 			// iterator
 
@@ -191,7 +189,6 @@ namespace ft
 			size_t _cap;
 
 		public:
-
 			typedef T value_type;
 			typedef size_t size_type;
 			typedef std::ptrdiff_t difference_type;
@@ -201,8 +198,8 @@ namespace ft
 			typedef const T * const_pointer;
 			typedef VectorIterator<T> iterator;
 			typedef VectorIterator<const T> const_iterator;
-			typedef std::reverse_iterator<iterator> reverse_iterator;
-			typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+			typedef ReverseIterator<iterator> reverse_iterator;
+			typedef ReverseIterator<const_iterator> const_reverse_iterator;
 
 			Vector():
 				_arr(NULL), _len(0), _cap(0)
@@ -267,22 +264,22 @@ namespace ft
 
 			reverse_iterator rbegin()
 			{
-				return std::reverse_iterator< VectorIterator<T> >(end());
+				return ReverseIterator< VectorIterator<T> >(end());
 			}
 
 			const_reverse_iterator rbegin() const
 			{
-				return std::reverse_iterator< VectorIterator<T> >(end());
+				return ReverseIterator< VectorIterator<T> >(end());
 			}
 
 			reverse_iterator rend()
 			{
-				return std::reverse_iterator< VectorIterator<T> >(begin());
+				return ReverseIterator< VectorIterator<T> >(begin());
 			}
 
 			const_reverse_iterator rend() const
 			{
-				return std::reverse_iterator< VectorIterator<T> >(begin());
+				return ReverseIterator< VectorIterator<T> >(begin());
 			}
 
 			// capacity
@@ -456,7 +453,7 @@ namespace ft
 			void insert(iterator pos, InputIt first, InputIt last)
 			{
 				size_t index = pos.ptr() - _arr;
-				size_t count = std::distance(first, last);
+				size_t count = distance(first, last);
 				if (!count)
 					return;
 

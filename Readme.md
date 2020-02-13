@@ -32,5 +32,4 @@ This implementation comes with a large set of tests in the test directory.
 - Vector: tests for const iter
 - List: operations (splice, ...)
 - List: max_size
-- check whether iterator_traits is correctly implemented
 - Queue and Stack: constructors and operator= private

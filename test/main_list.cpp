@@ -6,22 +6,11 @@
 /*   By: cchudant <cchudant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/24 10:52:03 by cchudant          #+#    #+#             */
-/*   Updated: 2020/01/30 21:29:45 by cchudant         ###   ########.fr       */
+/*   Updated: 2020/02/13 17:44:13 by cchudant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Test.hpp"
-
-// make the compiler happy (std::reverse_iterator cannot instanciate
-//   these templates autmatically for whatever reason)
-template bool ft::operator!=(
-	const ft::ListIterator<ConstrCounter>& lhs,
-	const ft::ListIterator<ConstrCounter>& rhs
-);
-template bool ft::operator==(
-	const ft::ListIterator<ConstrCounter>& lhs,
-	const ft::ListIterator<ConstrCounter>& rhs
-);
 
 template <typename T>
 static ft::ListIterator<T> get_n_fwd(ft::List<T>& lst, size_t index)

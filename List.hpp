@@ -6,14 +6,14 @@
 /*   By: cchudant <cchudant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/24 10:52:36 by cchudant          #+#    #+#             */
-/*   Updated: 2020/01/30 21:33:52 by cchudant         ###   ########.fr       */
+/*   Updated: 2020/02/13 18:10:49 by cchudant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIST_HPP
 # define LIST_HPP
 
-# include <iterator>
+# include "Utility.hpp"
 
 namespace ft
 {
@@ -38,17 +38,16 @@ namespace ft
 			ListNode<T>* _nxt;
 
 		public:
+			typedef std::ptrdiff_t difference_type;
+			typedef T value_type;
+			typedef T* pointer;
+			typedef T& reference;
+			typedef BidirectionalIteratorTag iterator_category;
+
 			ListIterator(ListNode<T>* prv, ListNode<T>* nxt):
 				_prv(prv), _nxt(nxt)
 			{
 			}
-
-			typedef T value_type;
-			typedef size_t size_type;
-			typedef std::ptrdiff_t difference_type;
-			typedef T& reference;
-			typedef T* pointer;
-			typedef std::bidirectional_iterator_tag iterator_category;
 
 			ListIterator(const ListIterator<T>& other):
 				_prv(other._prv), _nxt(other._nxt)
@@ -143,8 +142,8 @@ namespace ft
 			typedef const T* const_pointer;
 			typedef ListIterator<T> iterator;
 			typedef ListIterator<const T> const_iterator;
-			typedef std::reverse_iterator<iterator> reverse_iterator;
-			typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+			typedef ReverseIterator<iterator> reverse_iterator;
+			typedef ReverseIterator<const_iterator> const_reverse_iterator;
 			typedef std::ptrdiff_t difference_type;
 			typedef size_t size_type;
 

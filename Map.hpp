@@ -6,16 +6,14 @@
 /*   By: cchudant <cchudant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/30 23:30:02 by cchudant          #+#    #+#             */
-/*   Updated: 2020/01/31 01:02:38 by cchudant         ###   ########.fr       */
+/*   Updated: 2020/02/13 17:44:56 by cchudant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAP_HPP
 # define MAP_HPP
 
-# include <utility>
-# include <iterator>
-# include <functional>
+# include "Utility.hpp"
 
 namespace ft
 {
