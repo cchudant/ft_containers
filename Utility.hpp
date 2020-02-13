@@ -6,7 +6,7 @@
 /*   By: cchudant <cchudant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/13 16:40:50 by cchudant          #+#    #+#             */
-/*   Updated: 2020/02/13 18:15:26 by cchudant         ###   ########.fr       */
+/*   Updated: 2020/02/13 18:45:42 by cchudant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ namespace ft
 	};
 
 	template <typename T>
-	struct IteratorTraits<T*>
+	struct IteratorTraits<T*> // specialize IteratorTraits for arrays
 	{
 		typedef std::ptrdiff_t difference_type;
 		typedef T value_type;
@@ -139,7 +139,7 @@ namespace ft
 	};
 
 	template <typename T>
-	struct IteratorTraits<const T*>
+	struct IteratorTraits<const T*> // specialize IteratorTraits for const arrays
 	{
 		typedef std::ptrdiff_t difference_type;
 		typedef T value_type;
@@ -150,14 +150,27 @@ namespace ft
 
 	// Iterator distance
 
-	// note: could be optimized if InputIt is random access
+	// random access iterator optimization
+	template <typename RAIt>
+	typename IteratorTraits<RAIt>::difference_type distance(RAIt first, RAIt last, RandomAccessIteratorTag)
+	{
+		return last - first;
+	}
+
+	// non random access iterator implementation
+	template <typename It>
+	typename IteratorTraits<It>::difference_type distance(It first, It last, InputIteratorTag)
+	{
+		typename IteratorTraits<It>::difference_type dist = 0;
+		for (; first != last; ++first)
+			dist++;
+		return dist;
+	}
+
 	template <typename InputIt>
 	typename IteratorTraits<InputIt>::difference_type distance(InputIt first, InputIt last)
 	{
-		std::ptrdiff_t len = 0;
-		for (InputIt ite = first; ite != last; ++ite)
-			len++;
-		return len;
+		return distance(first, last, typename IteratorTraits<InputIt>::iterator_category());
 	}
 
 	// Reverse iterator

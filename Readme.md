@@ -7,7 +7,7 @@ You have to reimplement the following C++ containers:
 - [x] List ([std::list])
 - [x] Stack ([std::stack])
 - [ ] Map ([std::map])
-- [ ] Queue ([std::queue])
+- [x] Queue ([std::queue])
 
 Bonus:
 - [ ] Set ([std::set])
@@ -26,6 +26,15 @@ This implementation comes with a large set of tests in the test directory.
 [std::deque]: http://www.cplusplus.com/reference/deque/deque
 [std::multimap]: http://www.cplusplus.com/reference/map/multimap
 [std::multiset]: http://www.cplusplus.com/reference/set/multiset
+
+## docs
+
+Here are some random useful / interesting links:
+- [An introduction to C++ Traits](https://accu.org/index.php/journals/442)
+- [What is meant by "Constant Amortized Time" when talking about time complexity of an algorithm?](https://stackoverflow.com/questions/200384/constant-amortized-time)
+- [Map implementation - AVL tree algorithm visualization](https://www.cs.usfca.edu/~galles/visualization/AVLtree.html)
+- [Map implementation - AVL tree data structure](https://www.codesdope.com/course/data-structures-avl-trees/)
+- [Map implementation - Red-Black trees (not implemented here)](http://pages.cs.wisc.edu/~paton/readings/Red-Black-Trees/)
 
 ## todo
 
