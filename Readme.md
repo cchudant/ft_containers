@@ -9,6 +9,8 @@ You have to reimplement the following C++ containers:
 - [ ] Map ([std::map])
 - [x] Queue ([std::queue])
 
+STL is not allowed. That means you cannot you cannot use `<iterator>` or even `<utility>`.
+
 Bonus:
 - [ ] Set ([std::set])
 - [ ] Deque ([std::deque])
@@ -30,6 +32,7 @@ This implementation comes with a large set of tests in the test directory.
 ## docs
 
 Here are some random useful / interesting links:
+- [Which headers are STL](http://cs.stmarys.ca/~porter/csc/ref/stl/headers.html)
 - [An introduction to C++ Traits](https://accu.org/index.php/journals/442)
 - [What is meant by "Constant Amortized Time" when talking about time complexity of an algorithm?](https://stackoverflow.com/questions/200384/constant-amortized-time)
 - [Map implementation - AVL tree algorithm visualization](https://www.cs.usfca.edu/~galles/visualization/AVLtree.html)
@@ -41,4 +44,5 @@ Here are some random useful / interesting links:
 - Vector: tests for const iter
 - List: operations (splice, ...)
 - List: max_size
+- List: coplien form for ListNode
 - Queue and Stack: constructors and operator= private

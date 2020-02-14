@@ -6,7 +6,7 @@
 /*   By: cchudant <cchudant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/30 23:30:02 by cchudant          #+#    #+#             */
-/*   Updated: 2020/02/13 17:44:56 by cchudant         ###   ########.fr       */
+/*   Updated: 2020/02/14 05:01:06 by cchudant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MAP_HPP
 
 # include "Utility.hpp"
+# include "AVLTree.hpp"
 
 namespace ft
 {
@@ -21,96 +22,179 @@ namespace ft
 	template <typename Key, typename T, typename Compare>
 	class Map
 	{
+		public:
+			class value_compare;
+
 		private:
-			key_compare& _cmp;
+			AVLTree<Pair<const Key, T>, value_compare, false> _tree;
 
 		public:
-
 			typedef Key key_type;
 			typedef T mapped_type;
-			typedef std::pair<const key_type, mapped_type>;
+			typedef Pair<const key_type, mapped_type> value_type;
 			typedef Compare key_compare;
-			class value_compare;
 			typedef T& reference;
 			typedef const T& const_reference;
 			typedef T* pointer;
 			typedef const T* const_pointer;
-			typedef int iterator; //todo
-			typedef int const_iterator; //todo
-			typedef std::reverse_iterator<iterator> reverse_iterator;
-			typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+			typedef AVLTreeIterator<value_type, value_compare, false> iterator;
+			typedef AVLTreeIterator<const value_type, value_compare, false> const_iterator;
+			typedef ReverseIterator<iterator> reverse_iterator;
+			typedef ReverseIterator<const_iterator> const_reverse_iterator;
 			typedef std::ptrdiff_t difference_type;
 			typedef size_t size_type;
 
-			class value_compare: public binary_function<value_type, value_type, bool>
+			class value_compare
 			{
 				private:
-					value_compare _cmp;
+					Compare _cmp;
 
 					value_compare(Compare c):
 						_cmp(c)
 					{
 					}
 
+					value_compare& operator=(const value_compare& o);
+				
+				public:
+					typedef bool result_type;
+					typedef Pair<const Key, T> first_argument_type;
+					typedef Pair<const Key, T> second_argument_type;
+
 					~value_compare()
 					{
 					}
 
-					value_compare(const value_compare& o);
-					value_compare& operator=(const value_compare& o);
-				
-				public:
-
-					typedef bool result_type;
-					typedef value_type first_argument_type;
-					typedef value_type second_argument_type;
-
-					bool operator()(const value_type& x, const value_type& y) const
+					value_compare(const value_compare& o):
+						_cmp(o._cmp)
 					{
-						return cmp(x.first, y.first);
 					}
-			}
+
+					bool operator()(const Pair<const Key, T>& x, const Pair<const Key, T>& y) const
+					{
+						return _cmp(x.first, y.first);
+					}
+
+					template <typename K, typename U, typename Cmp>
+					friend class Map;
+			};
 
 			explicit Map(const key_compare& cmp = key_compare()):
-				_cmp(cmp)
+				_tree(value_compare(cmp))
 			{
 			}
 
 			template <typename InputIt>
-			Map(InputIt first, InputIt last, const key_compare& cmp = key_compare());
-			Map(const Map& o);
-			~Map();
-			Map<Key, T, Compare> operator=(const Map<Key, T, Compare>& o);
+			Map(InputIt first, InputIt last, const key_compare& cmp = key_compare()):
+				_tree(first, last, value_compare(cmp))
+			{
+			}
 
-			iterator begin();
-			const_iterator begin() const;
-			iterator end();
-			const_iterator end() const;
-			reverse_iterator rbegin();
-			const_reverse_iterator rbegin() const;
-			reverse_iterator rend();
-			const_reverse_iterator rend() const;
+			Map(const Map& o):
+				_tree(o._tree)
+			{
+			}
 
-			bool empty() const;
-			size_type size() const;
-			size_type max_size() const;
+			~Map()
+			{
+			}
+
+			Map<Key, T, Compare> &operator=(const Map<Key, T, Compare>& o)
+			{
+				_tree = o._tree;
+			}
+
+			iterator begin()
+			{
+				return _tree.begin();
+			}
+
+			const_iterator begin() const
+			{
+				return _tree.begin();
+			}
+
+			iterator end()
+			{
+				return _tree.end();
+			}
+
+			const_iterator end() const
+			{
+				return _tree.end();
+			}
+
+			reverse_iterator rbegin()
+			{
+				return _tree.rbegin();
+			}
+
+			const_reverse_iterator rbegin() const
+			{
+				return _tree.rbegin();
+			}
+
+			reverse_iterator rend()
+			{
+				return _tree.rend();
+			}
+
+			const_reverse_iterator rend() const
+			{
+				return _tree.rend();
+			}
+
+			bool empty() const
+			{
+				return _tree.empty();
+			}
+
+			size_type size() const
+			{
+				return _tree.size();
+			}
+
+			size_type max_size() const
+			{
+				return _tree.max_size();
+			}
 
 			mapped_type& operator[](const key_type& k);
 
-			std::pair<iterator, bool> insert(const value_type& val);
-			iterator insert(iterator position, const value_type& val);
+			Pair<iterator, bool> insert(const value_type& val)
+			{
+				return _tree.insert(val);
+			}
+
+			iterator insert(iterator hint, const value_type& val)
+			{
+				return _tree.insert(hint, val).first;
+			}
+
 			template <typename InputIt>
-			void insert(InputIt first, InputIt last);
+			void insert(InputIt first, InputIt last)
+			{
+				_tree.insert(first, last);
+			}
+
 			void erase(iterator position);
 			size_type erase(const key_type& k);
 			void erase(iterator first, iterator last);
 			void swap(Map<Key, T, Compare>& x);
-			void clear();
 
-			key_compare key_comp() const;
+			void clear()
+			{
+				_tree.clear();
+			}
+
+			key_compare key_comp() const
+			{
+				return _tree._cmp._cmp;
+			}
+
 			value_compare value_comp() const
 			{
-				return _cmp;
+				return _tree._cmp;
 			}
 
 			iterator find(const key_type& k);
@@ -121,8 +205,8 @@ namespace ft
 			iterator upper_bound(const key_type& k);
 			const_iterator upper_bound(const key_type& k) const;
 
-			std::pair<iterator, iterator> equal_range(const key_type& k);
-			std::pair<const_iterator, const_iterator> equal_range(const key_type& k) const;
+			Pair<iterator, iterator> equal_range(const key_type& k);
+			Pair<const_iterator, const_iterator> equal_range(const key_type& k) const;
 	};
 }
 

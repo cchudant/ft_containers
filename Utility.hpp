@@ -6,7 +6,7 @@
 /*   By: cchudant <cchudant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/13 16:40:50 by cchudant          #+#    #+#             */
-/*   Updated: 2020/02/13 18:45:42 by cchudant         ###   ########.fr       */
+/*   Updated: 2020/02/14 04:45:10 by cchudant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,14 @@ namespace ft
 	template <typename T1, typename T2>
 	struct Pair
 	{
-		T1 first_type;
-		T2 second_type;
+		typedef T1 first_type;
+		typedef T2 second_type;
+
+		T1 first;
+		T2 second;
 
 		Pair():
-			first_type(), second_type()
+			first(), second()
 		{
 		}
 
@@ -35,33 +38,33 @@ namespace ft
 		}
 
 		Pair(const T1& x, const T2& y):
-			first_type(x), second_type(y)
+			first(x), second(y)
 		{
 		}
 
 		template <typename U1, typename U2>
 		Pair(const Pair<U1, U2>& c):
-			first_type(c.first_type), second_type(c.second_type)
+			first(c.first), second(c.second)
 		{
 		}
 
 		Pair(const Pair<T1, T2>& c):
-			first_type(c.first_type), second_type(c.second_type)
+			first(c.first), second(c.second)
 		{
 		}
 
 		template <typename U1, typename U2>
 		Pair<T1, T2>& operator=(const Pair<U1, U2>& c)
 		{
-			first_type = c.first_type;
-			second_type = c.second_type;
+			first = c.first;
+			second = c.second;
 			return *this;
 		}
 
 		Pair<T1, T2>& operator=(const Pair<T1, T2>& c)
 		{
-			first_type = c.first_type;
-			second_type = c.second_type;
+			first = c.first;
+			second = c.second;
 			return *this;
 		}
 	};
