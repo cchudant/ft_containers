@@ -6,7 +6,7 @@
 /*   By: cchudant <cchudant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/14 01:15:42 by cchudant          #+#    #+#             */
-/*   Updated: 2020/02/14 09:32:08 by cchudant         ###   ########.fr       */
+/*   Updated: 2020/02/14 15:25:27 by cchudant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,7 +182,7 @@ namespace ft
 					(n->right ? n->right->height : -1);
 			}
 
-			static void leftRotation(node** target)
+			static void rotate_left(node** target)
 			{
 				node* y = (*target)->right;
 				node* parent = (*target)->parent;
@@ -201,7 +201,7 @@ namespace ft
 				) + 1;
 			}
 
-			static void rightRotation(node** target)
+			static void rotate_right(node** target)
 			{
 				node* y = (*target)->left;
 				node* parent = (*target)->parent;
@@ -220,12 +220,12 @@ namespace ft
 				) + 1;
 			}
 
-			static void clear_rec(node*& n)
+			static void deep_free(node*& n)
 			{
 				if (!n)
 					return;
-				clear_rec(n->left);
-				clear_rec(n->right);
+				deep_free(n->left);
+				deep_free(n->right);
 				delete n;
 				n = NULL;
 			}
@@ -251,6 +251,84 @@ namespace ft
 				return a > b ? a : b;
 			}
 
+			static node* deep_cpy(node *parent, node* n)
+			{
+				if (!n)
+					return NULL;
+				node* cpy = new node(n->el, parent, NULL, NULL, n->height);
+				cpy->left = deep_cpy(cpy, n->left);
+				cpy->right = deep_cpy(cpy, n->right);
+				return cpy;
+			}
+
+			void erase_rebalance(node *parent)
+			{
+				for (node* p = parent; p; p = p->parent)
+				{
+					p->height = max(
+						p->left ? p->left->height : -1,
+						p->right ? p->right->height : -1
+					) + 1;
+
+					if (balance_factor(p) <= -2 || balance_factor(p) >= 2)
+					{
+						node* x = p;
+						node* y = x->left->height > x->right->height ?
+							x->left : x->right;
+						node* z;
+						if (y->left->height == y->right->height)
+							z = y == x->left ? y->left : y->right;
+						else
+							z = y->left->height > y->right->height ? y->left : y->right;
+
+						if (y == x->left)
+						{
+							if (z == x->left->right)
+								rotate_left(y);
+							rotate_right(x);
+						}
+						else if (y == x->right)
+						{
+							if (z == x->right->left)
+								rotate_left(y);
+							rotate_right(x);
+						}
+					}
+				}
+			}
+
+			void insert_rebalance(node *inserted)
+			{
+				// go back to the root and update heights
+				for (node* n = inserted; n; n = n->parent)
+				{
+					n->height = max(
+						n->left ? n->left->height : -1,
+						n->right ? n->right->height : -1
+					) + 1;
+					node** x;
+					if (!n->parent)
+						x = &_root;
+					else
+						x = n == n->parent->left ? &n->parent->left : &n->parent->right;
+
+					if (balance_factor(n) < -1)
+					{
+						if (balance_factor(n->right) > 0)
+							rotate_right(&(*x)->right);
+						rotate_left(x);
+						break;
+					}
+					else if (balance_factor(n) > 1)
+					{
+						if (balance_factor(n->left) < 0)
+							rotate_left(&(*x)->left);
+						rotate_right(x);
+						break;
+					}
+				}
+			}
+
 		public:
 			typedef E value_type;
 			typedef Compare compare;
@@ -274,20 +352,21 @@ namespace ft
 			}
 
 			AVLTree(const AVLTree<E, Compare, AllowDuplicate>& o):
-				_cmp(o.cmp), _root(NULL), _len(0)
+				_cmp(o.cmp), _root(deep_cpy(NULL, o._root)), _len(o._len)
 			{
-				insert(o.begin(), o.end());
 			}
 
 			~AVLTree()
 			{
-				clear();
+				deep_free(_root);
 			}
 
 			AVLTree<E, Compare, AllowDuplicate> &operator=(const AVLTree<E, Compare, AllowDuplicate>& o)
 			{
-				clear();
-				insert(o.begin(), o.end());
+				deep_free(_root);
+				_root = deep_cpy(NULL, o._root);
+				_cmp = o._cmp;
+				_len = o._len;
 				return *this;
 			}
 
@@ -357,74 +436,45 @@ namespace ft
 			Pair<iterator, bool> insert(iterator hint, const value_type& val)
 			{
 				node* part = hint._node;
-				bool ret;
+				node* newNode;
 
 				if (!_root)
 				{
 					_root = new node(val, NULL, NULL, NULL, 0);
-					print_rec(_root, 1);
 					return make_pair(iterator(*this, _root), true);
 				}
 
-				// find where to insert
 				while (true)
 				{
 					if (!AllowDuplicate && part->el == val)
 						return make_pair(iterator(*this, part), false);
-					if ((ret = _cmp(val, part->el)))
+					if (_cmp(val, part->el))
 					{
-						// insert in the left part
 						if (part->left)
 							part = part->left;
 						else
+						{
+							newNode = new node(val, part, NULL, NULL, 0);
+							part->left = newNode;
 							break;
+						}
 					}
 					else
 					{
-						// insert in the right part
 						if (part->right)
 							part = part->right;
 						else
+						{
+							newNode = new node(val, part, NULL, NULL, 0);
+							part->right = newNode;
 							break;
+						}
 					}
 				}
 
-				// actually insert
-				node* newNode = new node(val, part, NULL, NULL, 0);
-				if (ret)
-					part->left = newNode;
-				else
-					part->right = newNode;
-
-				// go back to the root and update heights
-				for (node* n = newNode; n; n = n->parent)
-				{
-					n->height = max(
-						n->left ? n->left->height : -1,
-						n->right ? n->right->height : -1
-					) + 1;
-					node** x;
-					if (!n->parent)
-						x = &_root;
-					else
-						x = n == n->parent->left ? &n->parent->left : &n->parent->right;
-
-					if (balance_factor(n) < -1)
-					{
-						if (balance_factor(n->right) > 0)
-							rightRotation(&(*x)->right);
-						leftRotation(x);
-					}
-					else if (balance_factor(n) > 1)
-					{
-						if (balance_factor(n->left) < 0)
-							leftRotation(&(*x)->left);
-						rightRotation(x);
-					}
-				}
+				insert_rebalance(newNode);
 
 				_len++;
-				print_rec(_root, 1);
 				return make_pair(iterator(*this, newNode), true);
 			}
 
@@ -435,14 +485,86 @@ namespace ft
 					insert(*first);
 			}
 
-			void erase(iterator position);
-			void erase(iterator first, iterator last);
-			void swap(AVLTree<E, Compare, AllowDuplicate>& x);
+			void erase(iterator position)
+			{
+				node* n = position._node;
+
+				node** x;
+				if (!n->parent)
+					x = &_root;
+				else
+					x = n == n->parent->left ? &n->parent->left : &n->parent->right;
+				
+				if (!n->left && !n->right) // node is a leaf
+					*x = NULL;
+				else if ((n->left || n->right) && !(n->left && n->right)) // node has one child
+					*x = n->left ? n->left : n->right;
+				else // node has two children
+				{
+					node *succ = n->right;
+					while (succ->left)
+						succ = succ->left;
+					succ->parent->left = NULL;
+					succ->left = n->left;
+					succ->right = n->right;
+					*x = succ;
+				}
+
+				erase_rebalance(n->parent);
+
+				delete n;
+				_len--;
+			}
+
+			void erase(iterator first, iterator last)
+			{
+				for (; first != last; ++first)
+					erase(*first);
+			}
+
+			void swap(AVLTree<E, Compare, AllowDuplicate>& x)
+			{
+				std::swap(x._root, _root);
+				std::swap(x._cmp, _cmp);
+				std::swap(x._len, _len);
+			}
 
 			void clear()
 			{
-				clear_rec(_root);
+				deep_free(_root);
 				_len = 0;
+			}
+
+			template <typename EqualPredicate>
+			iterator find(EqualPredicate pred, const value_type &v)
+			{
+				node* n = _root;
+				while (n)
+				{
+					if (pred(n->el, v))
+						return iterator(*this, n);
+					if (_cmp(v, n->el))
+						n = n->left;
+					else
+						n = n->right;
+				}
+				return end();
+			}
+
+			template <typename EqualPredicate>
+			const_iterator find(EqualPredicate pred, const value_type& v) const
+			{
+				node* n = _root;
+				while (n)
+				{
+					if (pred(n->el, v))
+						return const_iterator(*this, n);
+					if (_cmp(v, n->el))
+						n = n->left;
+					else
+						n = n->right;
+				}
+				return end();
 			}
 
 			template <typename U, typename Cmp, bool ADup>

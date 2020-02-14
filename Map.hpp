@@ -6,7 +6,7 @@
 /*   By: cchudant <cchudant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/30 23:30:02 by cchudant          #+#    #+#             */
-/*   Updated: 2020/02/14 05:01:06 by cchudant         ###   ########.fr       */
+/*   Updated: 2020/02/14 15:23:02 by cchudant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,11 @@ namespace ft
 
 		private:
 			AVLTree<Pair<const Key, T>, value_compare, false> _tree;
+
+			static int keys_eq_predicate(const Pair<const Key, T> &a, const Pair<const Key, T> &b)
+			{
+				return a.first == b.first;
+			}
 
 		public:
 			typedef Key key_type;
@@ -159,7 +164,11 @@ namespace ft
 				return _tree.max_size();
 			}
 
-			mapped_type& operator[](const key_type& k);
+			mapped_type& operator[](const key_type& k)
+			{
+				Pair<iterator, bool> res = insert(make_pair(k, mapped_type()));
+				return res.first->second;
+			}
 
 			Pair<iterator, bool> insert(const value_type& val)
 			{
@@ -177,10 +186,22 @@ namespace ft
 				_tree.insert(first, last);
 			}
 
-			void erase(iterator position);
+			void erase(iterator position)
+			{
+				_tree.erase(position);
+			}
+
 			size_type erase(const key_type& k);
-			void erase(iterator first, iterator last);
-			void swap(Map<Key, T, Compare>& x);
+
+			void erase(iterator first, iterator last)
+			{
+				_tree.erase(first, last);
+			}
+
+			void swap(Map<Key, T, Compare>& x)
+			{
+				std::swap(_tree, x._tree);
+			}
 
 			void clear()
 			{
@@ -197,8 +218,16 @@ namespace ft
 				return _tree._cmp;
 			}
 
-			iterator find(const key_type& k);
-			const_iterator find(const key_type& k) const;
+			iterator find(const key_type& k)
+			{
+				return _tree.find(keys_eq_predicate, make_pair(k, mapped_type()));
+			}
+
+			const_iterator find(const key_type& k) const
+			{
+				return _tree.find(keys_eq_predicate, make_pair(k, mapped_type()));
+			}
+
 			size_type count(const key_type& k) const;
 			iterator lowest_bound(const key_type& k);
 			const_iterator lowest_bound(const key_type& k) const;

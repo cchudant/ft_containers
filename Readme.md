@@ -44,5 +44,6 @@ Here are some random useful / interesting links:
 - Vector: tests for const iter
 - List: operations (splice, ...)
 - List: max_size
-- List: coplien form for ListNode
+- List: make ListNode private
+- AVLTree: max_size
 - Queue and Stack: constructors and operator= private
