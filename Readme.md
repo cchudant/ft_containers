@@ -11,7 +11,7 @@ You have to reimplement the following C++ containers:
 
 STL is not allowed. That means you cannot you cannot use `<iterator>` or even `<utility>`.
 
-My map/deque/multimap/multiset implementations all use the AVLTree.hpp file in this repository as the
+My map/set/multimap/multiset implementations all use the AVLTree.hpp file in this repository as the
 underlying datastructure. It is supposed to be an automatically-balanced AVL tree, but
 it kinda doesn't work yet, and I have to redo the AVL algorithm at some point in the future.
 So, for now, access is *not* log n as the C++ specification requires it to be,
