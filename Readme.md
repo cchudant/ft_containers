@@ -19,7 +19,7 @@ because the tree is rarely balanced, but the containers still work :p
 
 Bonus:
 - [x] Set ([std::set])
-- [ ] Deque ([std::deque])
+- [x] Deque ([std::deque])
 - [x] Multimap ([std::multimap])
 - [x] Multiset ([std::multiset])
 
