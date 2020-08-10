@@ -3,140 +3,139 @@
 /*                                                        :::      ::::::::   */
 /*   Queue.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cchudant <cchudant@student.42.fr>          +#+  +:+       +#+        */
+/*   By: skybt <skybt@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/30 23:06:04 by cchudant          #+#    #+#             */
-/*   Updated: 2020/01/30 23:22:54 by cchudant         ###   ########.fr       */
+/*   Updated: 2020/08/10 19:38:41 by skybt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef QUEUE_HPP
-# define QUEUE_HPP
+#define QUEUE_HPP
 
-# include "List.hpp"
+#include "List.hpp"
 
 namespace ft
 {
-	template <typename T, typename Container = List<T> >
+	template <typename T, typename Container = List<T>>
 	class Queue
 	{
-		private:
-			Container _ctnr;
+	public:
+		typedef T value_type;
+		typedef Container container_type;
+		typedef size_t size_type;
 
-		public:
-			typedef T value_type;
-			typedef Container container_type;
-			typedef size_t size_type;
+	private:
+		typedef Queue<T, Container> _Self;
 
-			explicit Queue(const container_type& ctnr = container_type()):
-				_ctnr(ctnr)
-			{
-			}
+		container_type _ctnr;
 
-			~Queue()
-			{
-			}
+	public:
+		Queue(const container_type &ctnr = container_type())
+			: _ctnr(ctnr) {}
 
-			Queue(const Queue<T, Container>& o):
-				_ctnr(o._ctnr)
-			{
-			}
+		~Queue() {}
 
-			Queue<T, Container>& operator=(const Queue<T, Container>& o)
-			{
-				_ctnr = o._ctnr;
-				return *this;
-			}
+		Queue(const _Self &o)
+			: _ctnr(o._ctnr) {}
 
-			bool empty() const
-			{
-				return _ctnr.empty();
-			}
+		_Self &operator=(const _Self &o)
+		{
+			_ctnr = o._ctnr;
+			return *this;
+		}
 
-			size_type size() const
-			{
-				return _ctnr.size();
-			}
+		bool empty() const
+		{
+			return _ctnr.empty();
+		}
 
-			value_type& front()
-			{
-				return _ctnr.front();
-			}
+		size_type size() const
+		{
+			return _ctnr.size();
+		}
 
-			const value_type& front() const
-			{
-				return _ctnr.front();
-			}
+		value_type &front()
+		{
+			return _ctnr.front();
+		}
 
-			value_type& back()
-			{
-				return _ctnr.back();
-			}
+		const value_type &front() const
+		{
+			return _ctnr.front();
+		}
 
-			const value_type& back() const
-			{
-				return _ctnr.back();
-			}
+		value_type &back()
+		{
+			return _ctnr.back();
+		}
 
-			void push(const value_type& val)
-			{
-				return _ctnr.push_back(val);
-			}
+		const value_type &back() const
+		{
+			return _ctnr.back();
+		}
 
-			void pop()
-			{
-				_ctnr.pop_front();
-			}
+		void push(const value_type &val)
+		{
+			return _ctnr.push_back(val);
+		}
 
-			template <typename T2, typename Container2>
-			friend void swap(Queue<T2, Container2>& lhs, Queue<T2, Container2>& rhs);
-			template <typename T2, typename Container2>
-			friend bool operator==(const Queue<T2, Container2>& lhs, const Queue<T2, Container2>& rhs);
-			template <typename T2, typename Container2>
-			friend bool operator<(const Queue<T2, Container2>& lhs, const Queue<T2, Container2>& rhs);
+		void pop()
+		{
+			_ctnr.pop_front();
+		}
+
+		template <typename _T, typename _Container>
+		friend void swap(Queue<_T, _Container> &lhs, Queue<_T, _Container> &rhs);
+
+		template <typename _T, typename _Container>
+		friend bool operator==(const Queue<_T, _Container> &lhs, const Queue<_T, _Container> &rhs);
+
+		template <typename _T, typename _Container>
+		friend bool operator<(const Queue<_T, _Container> &lhs, const Queue<_T, _Container> &rhs);
 	};
 
 	template <typename T, typename Container>
-	void swap(Queue<T, Container>& lhs, Queue<T, Container>& rhs)
+	void swap(Queue<T, Container> &lhs, Queue<T, Container> &rhs)
 	{
 		ft::swap(lhs._ctnr, rhs._ctnr);
 	}
 
 	template <typename T, typename Container>
-	bool operator==(const Queue<T, Container>& lhs, const Queue<T, Container>& rhs)
+	bool operator==(const Queue<T, Container> &lhs, const Queue<T, Container> &rhs)
 	{
 		return lhs._ctnr == rhs._ctnr;
 	}
 
 	template <typename T, typename Container>
-	bool operator!=(const Queue<T, Container>& lhs, const Queue<T, Container>& rhs)
+	bool operator!=(const Queue<T, Container> &lhs, const Queue<T, Container> &rhs)
 	{
 		return !(lhs == rhs);
 	}
 
 	template <typename T, typename Container>
-	bool operator<(const Queue<T, Container>& lhs, const Queue<T, Container>& rhs)
+	bool operator<(const Queue<T, Container> &lhs, const Queue<T, Container> &rhs)
 	{
 		return lhs._ctnr < rhs._ctnr;
 	}
 
 	template <typename T, typename Container>
-	bool operator<=(const Queue<T, Container>& lhs, const Queue<T, Container>& rhs)
+	bool operator<=(const Queue<T, Container> &lhs, const Queue<T, Container> &rhs)
 	{
 		return !(lhs > rhs);
 	}
 
 	template <typename T, typename Container>
-	bool operator>(const Queue<T, Container>& lhs, const Queue<T, Container>& rhs)
+	bool operator>(const Queue<T, Container> &lhs, const Queue<T, Container> &rhs)
 	{
 		return rhs < lhs;
 	}
 
 	template <typename T, typename Container>
-	bool operator>=(const Queue<T, Container>& lhs, const Queue<T, Container>& rhs)
+	bool operator>=(const Queue<T, Container> &lhs, const Queue<T, Container> &rhs)
 	{
 		return !(lhs < rhs);
 	}
-}
+} // namespace ft
 
 #endif

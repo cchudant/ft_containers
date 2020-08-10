@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_vector.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cchudant <cchudant@student.42.fr>          +#+  +:+       +#+        */
+/*   By: skybt <skybt@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/24 06:28:20 by cchudant          #+#    #+#             */
-/*   Updated: 2020/01/30 21:28:11 by cchudant         ###   ########.fr       */
+/*   Updated: 2020/08/08 12:39:32 by skybt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ static void test_assign_iter()
 		assert(vec.size() == 0);
 	}
 	{
-		ConstrCounter array[5] = { 0, 1, 2, 3, 4 };
+		ConstrCounter array[5] = {0, 1, 2, 3, 4};
 
 		vec.assign(array, array + 5);
 		assert(vec.size() == 5);
@@ -86,7 +86,7 @@ static void test_assign_iter()
 		assert(vec[4].val == 4);
 	}
 	{
-		ConstrCounter array[2] = { 42, 43 };
+		ConstrCounter array[2] = {42, 43};
 
 		vec.assign(array, array + 2);
 		assert(vec.size() == 2);
@@ -136,7 +136,7 @@ static void test_constr_iter()
 		assert(vec.size() == 0);
 	}
 	{
-		ConstrCounter array[5] = { 0, 1, 2, 3, 4 };
+		ConstrCounter array[5] = {0, 1, 2, 3, 4};
 
 		ft::Vector<ConstrCounter> vec(array, array + 5);
 		assert(vec.size() == 5);
@@ -147,7 +147,7 @@ static void test_constr_iter()
 		assert(vec[4].val == 4);
 	}
 	{
-		ConstrCounter array[2] = { 42, 43 };
+		ConstrCounter array[2] = {42, 43};
 
 		ft::Vector<ConstrCounter> vec(array, array + 2);
 		assert(vec.size() == 2);
@@ -216,9 +216,14 @@ static void test_accessors()
 	assert(vec.at(2).val == 2);
 
 	bool exception = false;
-	try { vec.at(3); }
-	catch (const std::out_of_range& e)
-	{ exception = true; }
+	try
+	{
+		vec.at(3);
+	}
+	catch (const std::out_of_range &e)
+	{
+		exception = true;
+	}
 	assert(exception);
 
 	assert(vec.front().val == 0);
@@ -280,23 +285,25 @@ static void test_iterator()
 	assert(vec.begin() + 3 == vec.end());
 	assert(vec.begin() == vec.end() - 3);
 
-	ft::Vector<ConstrCounter>::iterator ite = vec.begin();
+	const ft::Vector<ConstrCounter> &vec2 = vec;
+
+	ft::Vector<ConstrCounter>::const_iterator ite = vec2.begin();
 	assert((*ite).val == 0);
 	assert(ite->val == 0);
-	assert(++ite == vec.begin() + 1);
+	assert(++ite == vec2.begin() + 1);
 	assert((*ite).val == 1);
 	assert(ite->val == 1);
-	assert(ite++ == vec.begin() + 1);
-	assert(ite == vec.begin() + 2);
+	assert(ite++ == vec2.begin() + 1);
+	assert(ite == vec2.begin() + 2);
 	assert((*ite).val == 2);
 	assert(ite->val == 2);
-	assert(++ite == vec.end());
-	assert(--ite == vec.end() - 1);
+	assert(++ite == vec2.end());
+	assert(--ite == vec2.end() - 1);
 	assert(ite->val == 2);
-	assert(ite-- == vec.end() - 1);
-	assert(ite == vec.end() - 2);
+	assert(ite-- == vec2.end() - 1);
+	assert(ite == vec2.end() - 2);
 	assert(ite->val == 1);
-	assert(--ite == vec.begin());
+	assert(--ite == vec2.begin());
 	assert(ite->val == 0);
 }
 
@@ -306,7 +313,7 @@ static void test_reverse_iterator()
 	vec.push_back(ConstrCounter(0));
 	vec.push_back(ConstrCounter(1));
 	vec.push_back(ConstrCounter(2));
-	
+
 	ft::Vector<ConstrCounter>::reverse_iterator ite =
 		vec.rbegin();
 	assert(ite->val == 2);
@@ -323,13 +330,11 @@ static void test_insert_one()
 	ft::Vector<ConstrCounter> vec;
 
 	vec.reserve(2);
-	assert(vec.insert(vec.begin(), ConstrCounter(5))
-		== vec.begin());
+	assert(vec.insert(vec.begin(), ConstrCounter(5)) == vec.begin());
 	assert(vec.size() == 1);
 	assert(vec[0].val == 5);
 
-	assert(vec.insert(vec.begin() + 1, ConstrCounter(5))
-		== vec.begin() + 1);
+	assert(vec.insert(vec.begin() + 1, ConstrCounter(5)) == vec.begin() + 1);
 	assert(vec.size() == 2);
 	assert(vec[1].val == 5);
 }
@@ -361,7 +366,7 @@ static void test_insert_iter()
 	assert(vec.size() == 0);
 
 	{
-		ConstrCounter array[5] = { 0, 1, 2, 3, 4 };
+		ConstrCounter array[5] = {0, 1, 2, 3, 4};
 
 		vec.insert(vec.begin(), array, array + 5);
 		assert(vec.size() == 5);
@@ -378,7 +383,7 @@ static void test_insert_iter()
 		assert(vec.size() == 5);
 	}
 	{
-		ConstrCounter array[2] = { 42, 43 };
+		ConstrCounter array[2] = {42, 43};
 
 		vec.insert(vec.begin() + 2, array, array + 2);
 		assert(vec.size() == 7);
@@ -395,7 +400,7 @@ static void test_insert_iter()
 static void test_erase()
 {
 	ft::Vector<ConstrCounter> vec;
-	ConstrCounter array[5] = { 0, 1, 2, 3, 4 };
+	ConstrCounter array[5] = {0, 1, 2, 3, 4};
 	vec.insert(vec.begin(), array, array + 5);
 
 	assert(vec.erase(vec.begin()) == vec.begin());
@@ -410,7 +415,7 @@ static void test_erase()
 static void test_erase_range()
 {
 	ft::Vector<ConstrCounter> vec;
-	ConstrCounter array[5] = { 0, 1, 2, 3, 4 };
+	ConstrCounter array[5] = {0, 1, 2, 3, 4};
 	vec.insert(vec.begin(), array, array + 5);
 
 	vec.erase(vec.begin() + 1, vec.end() - 1);
@@ -427,7 +432,7 @@ static void test_erase_range()
 static void test_pop_back()
 {
 	ft::Vector<ConstrCounter> vec;
-	ConstrCounter array[5] = { 0, 1, 2, 3, 4 };
+	ConstrCounter array[5] = {0, 1, 2, 3, 4};
 	vec.insert(vec.begin(), array, array + 5);
 
 	assert(vec.size() == 5);
@@ -469,10 +474,10 @@ static void test_resize()
 
 static void test_swap()
 {
-	ConstrCounter array[5] = { 0, 1, 2, 3, 4 };
+	ConstrCounter array[5] = {0, 1, 2, 3, 4};
 	ft::Vector<ConstrCounter> vec(array, array + 5);
 
-	ConstrCounter array2[3] = { 2, 3, 1 };
+	ConstrCounter array2[3] = {2, 3, 1};
 	ft::Vector<ConstrCounter> vec2(array2, array2 + 3);
 
 	vec.swap(vec2);
@@ -490,7 +495,7 @@ static void test_swap()
 
 static void test_cmp_eq()
 {
-	ConstrCounter array[5] = { 0, 1, 2, 3, 4 };
+	ConstrCounter array[5] = {0, 1, 2, 3, 4};
 	ft::Vector<ConstrCounter> vec(array, array + 5);
 	ft::Vector<ConstrCounter> vec2(vec);
 

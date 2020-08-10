@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_queue.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cchudant <cchudant@student.42.fr>          +#+  +:+       +#+        */
+/*   By: skybt <skybt@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/30 23:15:09 by cchudant          #+#    #+#             */
-/*   Updated: 2020/01/30 23:23:17 by cchudant         ###   ########.fr       */
+/*   Updated: 2020/08/08 12:39:21 by skybt            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,11 @@ static void test_push_pop()
 	assert(queue.back() == 2);
 	assert(queue.front() == 0);
 
-
 	queue.push(ConstrCounter(3));
 	assert(queue.size() == 4);
 	assert(!queue.empty());
 	assert(queue.back() == 3);
 	assert(queue.front() == 0);
-
 
 	queue.push(ConstrCounter(4));
 	assert(queue.size() == 5);
@@ -182,10 +180,10 @@ static void test_assign_copy()
 
 static void test_swap()
 {
-	ConstrCounter array[5] = { 0, 1, 2, 3, 4 };
+	ConstrCounter array[5] = {0, 1, 2, 3, 4};
 	ft::Queue<ConstrCounter> queue(ft::List<ConstrCounter>(array, array + 5));
 
-	ConstrCounter array2[3] = { 2, 3, 1 };
+	ConstrCounter array2[3] = {2, 3, 1};
 	ft::Queue<ConstrCounter> queue2(ft::List<ConstrCounter>(array2, array2 + 3));
 
 	ft::swap(queue, queue2);
@@ -207,7 +205,7 @@ static void test_swap()
 
 static void test_cmp_eq()
 {
-	ConstrCounter array[5] = { 0, 1, 2, 3, 4 };
+	ConstrCounter array[5] = {0, 1, 2, 3, 4};
 	ft::Queue<ConstrCounter> queue(ft::List<ConstrCounter>(array, array + 5));
 	ft::Queue<ConstrCounter> queue2(queue);
 

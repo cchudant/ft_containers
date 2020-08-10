@@ -6,16 +6,22 @@ You have to reimplement the following C++ containers:
 - [x] Vector ([std::vector])
 - [x] List ([std::list])
 - [x] Stack ([std::stack])
-- [ ] Map ([std::map])
+- [x] Map ([std::map])
 - [x] Queue ([std::queue])
 
 STL is not allowed. That means you cannot you cannot use `<iterator>` or even `<utility>`.
 
+My map/deque/multimap/multiset implementations all use the AVLTree.hpp file in this repository as the
+underlying datastructure. It is supposed to be an automatically-balanced AVL tree, but
+it kinda doesn't work yet, and I have to redo the AVL algorithm at some point in the future.
+So, for now, access is *not* log n as the C++ specification requires it to be,
+because the tree is rarely balanced, but the containers still work :p
+
 Bonus:
-- [ ] Set ([std::set])
+- [x] Set ([std::set])
 - [ ] Deque ([std::deque])
-- [ ] Multimap ([std::multimap])
-- [ ] Multiset ([std::multiset])
+- [x] Multimap ([std::multimap])
+- [x] Multiset ([std::multiset])
 
 This implementation comes with a large set of tests in the test directory.
 
@@ -41,9 +47,4 @@ Here are some random useful / interesting links:
 
 ## todo
 
-- Vector: tests for const iter
-- List: operations (splice, ...)
-- List: max_size
-- List: make ListNode private
-- AVLTree: max_size
-- Queue and Stack: constructors and operator= private
+- AVLTree: make it actually balanced
