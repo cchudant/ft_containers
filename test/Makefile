@@ -17,7 +17,7 @@ NAME=test_all
 all: clean run
 
 run: $(NAME)
-	valgrind ./test_all
+	./test_all
 
 $(NAME): $(OBJECTS)
 	$(CXX) $(CXXFLAGS) $(OBJECTS) -o $(NAME)
